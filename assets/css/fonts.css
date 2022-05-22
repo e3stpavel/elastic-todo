@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Tosh A';
+  font-weight: 500;
+  src: url('../fonts/ToshA-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Tosh A';
+  font-weight: 700;
+  src: url('../fonts/ToshA-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Tosh B';
+  font-weight: 700;
+  src: url('../fonts/ToshB-Bold.woff2') format('woff2');
+}

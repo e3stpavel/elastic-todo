@@ -1,8 +1,11 @@
+<script setup lang="ts">
+
+</script>
+
 <template>
-  <div>
-    <h1 class="text-red-400 text-2xl font-sans font-bold">
-      hello
-    </h1>
-    <Main />
-  </div>
+  <NuxtLayout name="todos">
+    <!-- header -->
+    <Header />
+    <h2>Done</h2>
+  </NuxtLayout>
 </template>
