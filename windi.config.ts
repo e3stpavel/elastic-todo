@@ -27,6 +27,7 @@ export default defineConfig({
         600: '#8E8E93',
         700: '#666666',
       },
+      transparent: 'rgba(0,0,0,0)',
     },
   },
 })

@@ -9,7 +9,7 @@
     <img class="w-full h-full overflow-hidden" src="~/assets/avatars/3DDD-4.png" alt="">
     <div
       class="absolute top-0 left-0 w-full h-full rounded-full bg-transparent
-    opacity-0 flex justify-center items-center hover:(bg-dark bg-opacity-40 opacity-100)"
+    opacity-0 flex justify-center items-center hover:(bg-dark bg-opacity-40 opacity-100 cursor-pointer)"
     >
       <span class="text-white text-2xl">U</span>
     </div>

@@ -13,6 +13,7 @@ export default defineNuxtConfig({
   },
   css: [
     '~/assets/css/styles.css',
+    '~/assets/css/fonts.css',
   ],
   vite: {
     plugins: [

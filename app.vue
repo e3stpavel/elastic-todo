@@ -20,6 +20,6 @@
 
 <style>
 .header {
-  width: calc(816px - (1.5em * 2));
+  width: calc(51em - (1.5em * 2));
 }
 </style>

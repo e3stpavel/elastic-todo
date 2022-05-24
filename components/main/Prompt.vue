@@ -3,7 +3,7 @@ import PlusIcon from '~icons/ph/plus-bold'
 </script>
 
 <template>
-  <div class="w-full flex flex-row py-4 px-6 items-center text-gray-700 bg-gray-100 gap-x-4 rounded-3xl">
+  <div id="add_todo" class="w-full flex flex-row py-4 px-6 items-center text-gray-700 bg-gray-100 gap-x-4 rounded-3xl">
     <PlusIcon class="w-8 h-8" />
     <div class="flex flex-col">
       <span class="text-gray-600 uppercase text-sm">Add new task</span>
