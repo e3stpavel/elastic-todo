@@ -11,16 +11,23 @@ const isTop = ref(false)
 const isCopied = ref(false)
 const renderToast = ref(false)
 
-const copySelfUri = (uri: string) => {
+const copySelfUri = async (uri: string) => {
   // easier to do window.location.href but nevermind
   const link = `${window.location.protocol}//${window.location.host}/list-${uri}`
 
-  navigator.clipboard.writeText(link).then(() => {
+  try {
+    await navigator.clipboard.writeText(link)
+
     isCopied.value = true
     renderToast.value = true
 
     setTimeout(() => renderToast.value = false, 1500)
-  })
+  }
+  catch (e) {
+    isCopied.value = false
+    renderToast.value = true
+    setTimeout(() => renderToast.value = false, 1500)
+  }
 }
 
 const goToTop = () => {

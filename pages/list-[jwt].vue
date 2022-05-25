@@ -11,6 +11,9 @@ const data = Buffer.from(token, 'base64').toString('utf-8').split(',')
 
 <template>
   <NuxtLayout name="todos">
+    <Head>
+      <Title>{{ data[1] }}'s Todo List</Title>
+    </Head>
     <!-- header -->
     <Header class="fixed header" :username="data[1]" :self-uri="token" />
     <!-- end header -->
