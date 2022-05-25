@@ -1,5 +1,9 @@
 <script setup lang="ts">
 // TODO: randoly assign avatar for each new entry
+
+const props = defineProps<{
+  username: string
+}>()
 </script>
 
 <template>
@@ -11,7 +15,7 @@
       class="absolute top-0 left-0 w-full h-full rounded-full bg-transparent
     opacity-0 flex justify-center items-center hover:(bg-dark bg-opacity-40 opacity-100 cursor-pointer)"
     >
-      <span class="text-white text-2xl">U</span>
+      <span class="text-white text-2xl">{{ username.trim().slice(0, 2).toUpperCase() }}</span>
     </div>
   </div>
 </template>

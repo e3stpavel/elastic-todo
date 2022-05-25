@@ -15,6 +15,9 @@ export default defineNuxtConfig({
     '~/assets/css/styles.css',
     '~/assets/css/fonts.css',
   ],
+  runtimeConfig: {
+    jwtClientUriSecret: process.env.NUXT_JWT_CLIENT_URI_SECRET,
+  },
   vite: {
     plugins: [
       Icons({
