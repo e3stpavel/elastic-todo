@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   // try to add todo
   try {
-    const todo: Todo = {
+    const todo = {
       text: body.todoText,
       assignedAt: new Date().toISOString(),
       status: false,
@@ -23,13 +23,20 @@ export default defineEventHandler(async (event) => {
     // for now dont have enought time to figure the better solution
     // will just lowercase the base64
     // TODO: this should be fixed
-    await client.index({
+    const response = await client.index({
       index: `list-${body.listId.toLowerCase()}`,
       document: todo,
     })
 
+    const createdTodo: Todo = {
+      id: response._id,
+      text: todo.text,
+      assignedAt: todo.assignedAt,
+      status: todo.status,
+    }
+
     res.writeHead(201, { 'Content-Type': 'application/json' })
-    res.write(JSON.stringify({ todo }))
+    res.write(JSON.stringify({ created: createdTodo }))
     res.end()
   }
   catch (e) {

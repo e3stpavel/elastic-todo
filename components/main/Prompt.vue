@@ -6,6 +6,8 @@ const props = defineProps<{
   listId: string
 }>()
 
+const todos = useTodos()
+
 const isAdded = ref(false)
 const renderToast = ref(false)
 
@@ -21,8 +23,7 @@ onMounted(() => {
     e.preventDefault()
     input.blur()
 
-    console.log('adding..')
-    const response = await $fetch<{ todo: Todo }>('/api/todos/add', {
+    const response = await $fetch<{ created: Todo }>('/api/todos/add', {
       method: 'post',
       body: {
         listId: props.listId,
@@ -30,7 +31,7 @@ onMounted(() => {
       },
     })
 
-    if (!response.todo) {
+    if (!response.created) {
       isAdded.value = false
       renderToast.value = true
       setTimeout(() => renderToast.value = false, 1500)
@@ -40,6 +41,9 @@ onMounted(() => {
     isAdded.value = true
     renderToast.value = true
     setTimeout(() => renderToast.value = false, 1500)
+
+    // add to state
+    todos.value.push(response.created)
 
     input.value = ''
   })

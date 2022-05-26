@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import type { Todo } from '../composables/Todo'
+import type { Todo } from '~/composables/Todo'
 // working not as expected
 // const hello = ref('')
 // const { data, pending, error } = await useLazyAsyncData('hello', () => $fetch('/api/hello'), { server: false })
@@ -10,39 +9,52 @@ const props = defineProps<{
   listId: string
 }>()
 
-// using default fetch
-const data: Ref<{ _index: string; _id: string; _source: Todo }[]> = ref()
-const pending = ref(true)
+const errors = ref(false)
+const todos = useTodos()
 
-const clearDoneTodos = () => {
-  console.log('here')
+const clearDoneTodos = async () => {
+  try {
+    const { deleted }: { deleted: { deleted: number; failures: [] } } = await $fetch('/api/todos/all', {
+      method: 'DELETE',
+      body: {
+        listId: props.listId,
+      },
+    })
+
+    if (deleted.failures.length === 0) {
+      todos.value = todos.value.filter((todo) => {
+        return !todo.status
+      })
+    }
+  }
+  catch (e) {
+    console.error(e)
+  }
+
   // TODO: delete done todos from database
 }
 
 onMounted(async () => {
-  // const response = await $fetch('/api/todos/add', {
-  //   method: 'post',
-  //   body: {
-  //     listId: props.listId,
-  //     todoText: 'hello todo 2',
-  //   },
-  // })
   try {
+    todos.value = []
     const { hits }
-      = await $fetch<{ hits: { _index: string; _id: string; _source: Todo }[] }>(`/api/todos/all?listId=${props.listId}`)
+      = await $fetch<{ hits: Todo[] }>(`/api/todos/all?listId=${props.listId}`, {
+        async onResponseError({ request, response, options }) {
+          if (response.status === 404)
+            errors.value = true
+        },
+      })
     // const response = await fetch(`/api/todos/all?listId=${props.listId}`)
     // const { hits } = await response.json()
-    console.log(hits)
 
-    data.value = hits
-    pending.value = !data.value
+    todos.value = hits
+    if (todos.value.length < 1)
+      errors.value = true
   }
   catch (e) {
     console.error(e)
   }
 })
-
-// TODO: use state to rerender the data
 </script>
 
 <template>
@@ -52,16 +64,21 @@ onMounted(async () => {
       <MainPrompt
         :list-id="props.listId"
       />
+
+      <p v-if="todos.length < 1" class="text-center">
+        😶 Your list dont have any todos yet! Start adding!
+      </p>
+
       <MainCard
-        v-for="hit in data"
-        :key="hit._id"
-        :todo-id="hit._id"
-        :text="hit._source.text"
-        :added-at="new Date(hit._source.assignedAt)"
-        :status="hit._source.status"
+        v-for="todo in todos.filter((todo) => {
+          return !todo.status
+        })"
+        :key="todo.id"
+        :list-id="props.listId"
+        :todo-id="todo.id"
       />
 
-      <template v-if="pending">
+      <template v-if="todos.length < 1 && !errors">
         <div
           v-for="n in 2" :key="n"
           class="w-full flex flex-row py-4 pl-6 pr-5 items-center bg-gray-100 gap-x-6 rounded-3xl"
@@ -82,19 +99,27 @@ onMounted(async () => {
       <h2>Done</h2>
       <ButtonSecondary
         text="Clear"
-        :class="pending ? '!text-gray-300' : ''"
-        v-on="!pending ? { click: () => clearDoneTodos() } : {}"
+        :class="todos.length < 1 && !errors ? '!text-gray-300' : ''"
+        v-on="!(todos.length < 1 && !errors) ? { click: () => clearDoneTodos() } : {}"
       />
     </div>
     <div class="px-6 flex flex-col gap-y-4">
-      <!-- <MainCard /> -->
+      <MainCard
+        v-for="todo in todos.filter((todo) => {
+          return todo.status
+        })"
+        :key="todo.id"
+        :list-id="props.listId"
+        :todo-id="todo.id"
+      />
 
-      <template v-if="pending">
+      <template v-if="todos.length < 1 && !errors">
         <div
-          v-for="n in 2" :key="n"
           class="w-full flex flex-row py-4 pl-6 pr-5 items-center bg-gray-100 gap-x-6 rounded-3xl"
         >
-          <div class="flex items-center justify-center border-2 border-gray-300 rounded-full w-6 h-6" />
+          <div class="flex items-center justify-center border-2 border-gray-300 rounded-full w-6 h-6">
+            <div class="w-4 h-4 bg-gray-300 rounded-full" />
+          </div>
           <div class="flex flex-col w-3/4">
             <div class="w-1/3 h-4.5 bg-gray-300 rounded-lg mb-1" />
             <div class="w-3/4 h-9 bg-gray-300 rounded-xl" />
